@@ -87,7 +87,7 @@ router.post('/', [auth,
                 await profile.save();
             }
 
-            res.send(profile);
+            res.send(profile); // not sending back after new profile created
 
         } catch (error) {
             console.error(error.message);
@@ -126,9 +126,9 @@ router.get('/user/:user_id', async (req, res) => {
         if (!profile) {
             return res.json({ msg: 'Profile not found' });
         }
-        
+
         res.json(profile);
-        
+
     } catch (error) {
         console.error(error.message);
         if (error.kind == 'ObjectId') {
@@ -141,7 +141,7 @@ router.get('/user/:user_id', async (req, res) => {
 // @route   DELETE /api/profile/me
 // @desc    Delete profile, user & posts
 // @access  PRIVATE
-router.delete('/me', auth, async (req ,res) => {
+router.delete('/me', auth, async (req, res) => {
     try {
         // delete profile
         await Profile.findOneAndRemove({ user: req.user.id }, { useFindAndModify: false });
@@ -155,7 +155,57 @@ router.delete('/me', auth, async (req ,res) => {
         console.log(error.message);
         res.status(500).send({ msg: 'Server error' });
     }
-
 })
+
+// @route PUT /api/profile/experience
+// @desc Add experience to profile
+// @access PRIVATE
+router.put('/experience', [auth, [
+    check('title', 'Title is required').notEmpty(),
+    check('company', 'Company is required').notEmpty(),
+    check('description', 'Description is required').notEmpty()
+]],
+    async (req, res) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { title, company, location, from, to, current, description } = req.body;
+
+        let newExp = { title, company, location, from, to, current, description };
+
+        try {
+            let profile = await Profile.findOne({ user: req.user.id });
+            profile.experience.unshift(newExp);
+            await profile.save();
+
+            res.json({ msg: 'Experience added' })
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send({ msg: 'Server error' });
+        }
+
+    }
+)
+
+// @route   DELETE /api/profile/experience/:exp_id
+// @desc    Delete experience from profile
+// @access  PRIVATE
+router.delete('/experience/:exp_id', auth, async (req, res) => {
+    try {
+        let profile = await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $pull: { experience: { _id: req.params.exp_id } } },
+            { useFindAndModify: false });
+            
+        await profile.save();
+        res.json({ msg: 'Experience has been deleted' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ msg: 'Server error' });
+    }
+}) 
 
 module.exports = router;
