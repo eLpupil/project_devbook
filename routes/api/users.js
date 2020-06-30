@@ -60,7 +60,7 @@ router.post('/',
             }
 
             let token = await jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 3600 });
-            res.send(token);
+            res.send({ "token": token });
 
         } catch (error) {
             res.status(500).send('Server error');
