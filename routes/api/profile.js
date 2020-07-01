@@ -208,4 +208,63 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     }
 }) 
 
+// @route   PUT /api/profile/education
+// @desc    Add education to profile
+// @access  PRIVATE
+router.put('/education', [ auth, [
+    check('school', 'Please enter a school').notEmpty(),
+    check('degree', 'Please enter a degree').notEmpty(),
+    check('fieldofstudy', 'Please enter a field of study').notEmpty(),
+    check('from', 'Please enter a start date').notEmpty()
+    ] ], 
+    async (req, res) => {
+        const errors = validationResult(req);
+        
+        if(!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { school, degree, fieldofstudy, from, to, current, description } = req.body;
+
+        let newEducation = {};
+        if(school) newEducation.school = school;
+        if(degree) newEducation.degree = degree;
+        if(fieldofstudy) newEducation.fieldofstudy = fieldofstudy;
+        if(from) newEducation.from = from;
+        if(to) newEducation.to = to;
+        if(current) newEducation.current = current;
+        if(description) newEducation.description = description;
+
+        try {
+            let profile = await Profile.findOne({ user: req.user.id });
+            profile.education.unshift(newEducation);
+
+            await profile.save();
+            res.json({ msg: 'Education Added' });
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).json({ msg: 'Server error' });
+        }
+
+    }
+)
+
+// @route   DELETE /api/profile/education/:edu_id
+// @desc    Delete an education from profile 
+// @access  PRIVATE
+router.delete('/education/:edu_id', auth, async (req, res) => {
+    try {
+        let profile = await Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $pull: { education: { _id: req.params.edu_id } } },
+            { new: true, useFindAndModify: false });
+
+        await profile.save();
+        res.json({ msg: 'Education deleted' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ msg: 'Server error' });
+    }
+})
+
 module.exports = router;
