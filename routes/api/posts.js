@@ -18,25 +18,22 @@ router.post('/',
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.json({ errors: errors.array() });
+            res.status(400).json({ errors: errors.array() });
         }
 
         try {
-            let queriedUser = await User.findById(req.user.id);
-            const { _id, name, avatar } = queriedUser;
+            let user = await User.findById(req.user.id).select('-password');
             
-            const { text } = req.body;
-    
             let postFields = { 
-                user: _id,
-                text,
-                name,
-                avatar
+                user: req.user.id,
+                text: req.body.text,
+                name: user.name,
+                avatar: user.avatar
              };
 
-            let post = await new Post(postFields);
+            let post = new Post(postFields);
             await post.save();
-            res.json({ msg: 'Post added' });
+            res.json({ msg: 'Post added', post });
 
         } catch (error) {
             console.error(error.message);
@@ -45,4 +42,8 @@ router.post('/',
         
     }
 )
+
+// route for getting all posts
+// route for getting post by ID
+// route for deleting a post
 module.exports = router;

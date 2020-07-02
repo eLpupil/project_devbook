@@ -1,6 +1,0 @@
-{
-    "mongoURI": "mongodb://localhost:27017/devconnect",
-    "jwtSecret": "timetopaythepiedpiper",
-    "githubClientId": "d4f0a4dba21cc05c23b3",
-    "githubSecret": "dcaf72e2cee7ba2bcf58c741b59bb21b854e07dd"
-}
