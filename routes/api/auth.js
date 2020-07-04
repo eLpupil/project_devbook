@@ -23,6 +23,7 @@ router.get('/', auth, async (req, res) => {
 // @route   POST api/auth
 // @desc    Authenticate user & get token
 // @access  PUBLIC
+// @todo make email check case insensitive!
 router.post('/', 
     [
     check('email', 'Please enter valid email').exists().isEmail(),

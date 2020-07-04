@@ -48,7 +48,7 @@ router.post('/',
 
 // @route   GET /api/posts
 // @desc    Get all posts
-// @access  PRIVATe
+// @access  PRIVATE
 router.get('/', auth, async (req, res) => {
     try {
         let posts = await Post.find().sort({ date: -1 });
@@ -108,14 +108,44 @@ router.delete('/:post_id', auth, async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        if (error.kind == 'ObjectId') {
+        if (error.kind === 'ObjectId') {
             return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}. Delete failed` });
         }
         res.status(500).json({ msg: 'Server error' });
     }
 })
 
-// route for updating likes (like)
+// @route   PUT /api/posts/:post_id
+// @desc    Allow user to like a post
+// @access  PRIVATE
+router.put('/:post_id', auth, async (req, res) => {
+    try {
+        let post = await Post.findById(req.params.post_id);
+        
+        if (!post) {
+            return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
+        }
+
+        for (let i = 0; i < post.likes.length; i++) {
+            if (post.likes[i].user.toString() == req.user.id) {
+                return res.status(400).json({ msg: 'Error: Post has already been liked by user' });
+            }
+
+        }
+
+        post.likes.unshift({ user: req.user.id });
+        await post.save();
+        res.json({ msg: post.likes.length }); //include number of likes for the post
+    } catch (error) {
+        console.error(error.message);
+        if (error.kind === 'ObjectId') {
+            return  res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
+        }
+        res.status(500).json({ msg: 'Server error' });
+    }
+})
+
+
 // route for updating likes (unlike)
 
 // route for adding comment
