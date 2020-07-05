@@ -4,9 +4,10 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const User = require('../../models/user');
 const Post = require('../../models/Post');
-const { route } = require('./profile');
-const { findByIdAndDelete, findOneAndRemove } = require('../../models/user');
-const { ObjectId } = require('mongodb');
+// const { route } = require('./profile');
+// const { findByIdAndDelete, findOneAndRemove } = require('../../models/user');
+// const { ObjectId } = require('mongodb');
+// const { post } = require('request');
 
 // @route   POST /api/posts
 // @desc    Add new post 
@@ -16,7 +17,7 @@ router.post('/',
         [
             check('text', 'Post cannot be empty').notEmpty()
         ]
-    ], 
+    ],
     async (req, res) => {
 
         const errors = validationResult(req);
@@ -26,13 +27,13 @@ router.post('/',
 
         try {
             let user = await User.findById(req.user.id).select('-password');
-            
-            let postFields = { 
+
+            let postFields = {
                 user: req.user.id,
                 text: req.body.text,
                 name: user.name,
                 avatar: user.avatar
-             };
+            };
 
             let post = new Post(postFields);
             await post.save();
@@ -40,9 +41,9 @@ router.post('/',
 
         } catch (error) {
             console.error(error.message);
-            res.status(500).json({ msg: 'Server error '});
+            res.status(500).json({ msg: 'Server error ' });
         }
-        
+
     }
 )
 
@@ -52,7 +53,7 @@ router.post('/',
 router.get('/', auth, async (req, res) => {
     try {
         let posts = await Post.find().sort({ date: -1 });
-        
+
         if (!posts) {
             return res.status(404).json({ msg: 'There are no posts' });
         }
@@ -60,7 +61,7 @@ router.get('/', auth, async (req, res) => {
         res.json(posts);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ msg: 'Server error '});
+        res.status(500).json({ msg: 'Server error ' });
     }
 })
 
@@ -70,7 +71,7 @@ router.get('/', auth, async (req, res) => {
 router.get('/:post_id', auth, async (req, res) => {
     try {
         let post = await Post.findById(req.params.post_id);
-        
+
         if (!post) {
             return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
         }
@@ -108,47 +109,94 @@ router.delete('/:post_id', auth, async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        if (error.kind === 'ObjectId') {
+        if (error.kind == 'ObjectId') {
             return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}. Delete failed` });
         }
         res.status(500).json({ msg: 'Server error' });
     }
 })
 
-// @route   PUT /api/posts/:post_id
-// @desc    Allow user to like a post
+// @route   PUT /api/posts/likes/:post_id
+// @desc    let user like or unlike a post
 // @access  PRIVATE
-router.put('/:post_id', auth, async (req, res) => {
+router.put('/likes/:post_id', auth, async (req, res) => {
     try {
         let post = await Post.findById(req.params.post_id);
-        
+
         if (!post) {
             return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
         }
 
         for (let i = 0; i < post.likes.length; i++) {
             if (post.likes[i].user.toString() == req.user.id) {
-                return res.status(400).json({ msg: 'Error: Post has already been liked by user' });
+                post.likes.splice(i, 1);
+                await post.save();
+                return res.status(400).json({ msg: `Post has been unliked. Number of likes: ${post.likes.length}` });
             }
 
         }
 
         post.likes.unshift({ user: req.user.id });
         await post.save();
-        res.json({ msg: post.likes.length }); //include number of likes for the post
+        res.json({ msg: post.likes.length });
     } catch (error) {
         console.error(error.message);
-        if (error.kind === 'ObjectId') {
-            return  res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
+        if (error.kind == 'ObjectId') {
+            return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
         }
         res.status(500).json({ msg: 'Server error' });
     }
 })
 
+// @route   PUT /api/posts/comments/:post_id
+// @desc    let user comment
+// @access  PRIVATE
+router.put('/comments/:post_id', 
+    [ auth, 
+        [
+        check('text', 'Comment cannot be empty').notEmpty()
+        ] 
+    ], 
+    async (req, res) => {
 
-// route for updating likes (unlike)
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-// route for adding comment
+        try {
+            const user = await User.findById(req.user.id).select('-password');
+
+            let post = await Post.findById(req.params.post_id);
+
+            if (!post) {
+                return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
+            }
+
+            const { _id, name, avatar } = user;
+            const { text } = req.body;
+
+            const newComment = {
+                user: _id,
+                text,
+                name,
+                avatar
+            }
+
+            post.comments.push(newComment);
+            await post.save();
+            res.json({ msg: 'Comment has been added' });
+
+        } catch (error) {
+            console.error(error.message);
+            if (error.kind == 'ObjectId') {
+                return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` })
+            }
+            res.status(500).json({ msg: 'Server error' });
+        }
+    }
+)
+
 // route for removing comment
 
 
