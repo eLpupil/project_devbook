@@ -121,6 +121,7 @@ router.delete('/:post_id', auth, async (req, res) => {
 // @access  PRIVATE
 router.put('/likes/:post_id', auth, async (req, res) => {
     try {
+
         let post = await Post.findById(req.params.post_id);
 
         if (!post) {
@@ -128,17 +129,19 @@ router.put('/likes/:post_id', auth, async (req, res) => {
         }
 
         for (let i = 0; i < post.likes.length; i++) {
+
             if (post.likes[i].user.toString() == req.user.id) {
                 post.likes.splice(i, 1);
                 await post.save();
-                return res.status(400).json({ msg: `Post has been unliked. Number of likes: ${post.likes.length}` });
+                return res.status(400).json(post.likes);
             }
 
         }
 
         post.likes.unshift({ user: req.user.id });
         await post.save();
-        res.json({ msg: post.likes.length });
+        res.json(post.likes);
+
     } catch (error) {
         console.error(error.message);
         if (error.kind == 'ObjectId') {
@@ -148,10 +151,10 @@ router.put('/likes/:post_id', auth, async (req, res) => {
     }
 })
 
-// @route   PUT /api/posts/comments/:post_id
-// @desc    let user comment
+// @route   PUT /api/posts/comment/:post_id
+// @desc    let user comment on a post
 // @access  PRIVATE
-router.put('/comments/:post_id', 
+router.put('/comment/:post_id', 
     [ auth, 
         [
         check('text', 'Comment cannot be empty').notEmpty()
@@ -173,19 +176,18 @@ router.put('/comments/:post_id',
                 return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
             }
 
-            const { _id, name, avatar } = user;
-            const { text } = req.body;
+            const { name, avatar } = user;
 
             const newComment = {
-                user: _id,
-                text,
+                user: req.user.id,
+                text: req.body.text,
                 name,
                 avatar
             }
 
             post.comments.push(newComment);
             await post.save();
-            res.json({ msg: 'Comment has been added' });
+            res.json(post.comments);
 
         } catch (error) {
             console.error(error.message);
@@ -197,7 +199,39 @@ router.put('/comments/:post_id',
     }
 )
 
-// route for removing comment
+// @route   DELETE /api/posts/comment/:post_id/:comment_id
+// @desc    delete comment from post
+// @accces  PRIVATE
+router.delete('/comment/:post_id/:comment_id', auth, async (req, res) => {
+    try {
+        let post = await Post.findById(req.params.post_id);
 
+        if (!post) {
+            return res.status(404).json({ msg: 'Post not found' });
+        }
+
+        for (let i = 0; i < post.comments.length; i++) {
+
+            if (post.comments[i].id == req.params.comment_id) {
+
+                if (post.comments[i].user != req.user.id) {
+                    return res.status(401).json({ msg: 'Authorization error. Comment does not belong to user' });
+                }
+
+                post.comments.splice(i, 1);
+                await post.save();
+                return res.json(post.comments);
+            }
+        }
+        res.status(404).json({ msg: 'Comment not found' });
+        
+    } catch (error) {
+        console.error(error.message);
+        if (error.kind == 'ObjectId') {
+            return res.status(404).json({ msg: 'Error: Invalid Id' });
+        }
+        res.status(500).json({ msg: 'Server error' });
+    }
+})
 
 module.exports = router;
