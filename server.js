@@ -7,7 +7,7 @@ const app = express();
 connectDB();
 
 // Body Parser Middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => res.send('api works'));
