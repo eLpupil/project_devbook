@@ -27,9 +27,11 @@ function App() {
       <Router>
         <Fragment>
           <Navbar />
+          <div className="alert-container">
+            <Alert />
+          </div>
           <Route exact={true} path='/' component={Landing} />
           <div className="container">
-            <Alert />
             <Switch>
               <Route path='/login' component={Login} />
               <Route path='/register' component={Register} />

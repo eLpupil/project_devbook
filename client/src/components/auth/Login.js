@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
@@ -26,6 +26,10 @@ function Login(props) {
         const user = { email, password };
         
         props.login(user);
+    }
+
+    if (props.isAuthenticated) {
+        return <Redirect to='/dashboard'/> 
     }
 
     return (
@@ -59,14 +63,21 @@ function Login(props) {
                 <input type="submit" className="btn btn-primary" value="Login" />
             </form>
             <p className="my-1">
-                Don't have an account? <Link to="register">Sign Up</Link>
+                Don't have an account? <Link to="/register">Sign Up</Link>
             </p>
         </Fragment>
     )
 }
 
 Login.propTypes = {
-    login: PropTypes.func.isRequired
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
 }
 
-export default connect(null, { login })(Login);
+function mapStateToProps(state) {
+    return {
+        isAuthenticated: state.auth.isAuthenticated
+    }
+}
+
+export default connect( mapStateToProps, { login })(Login);
