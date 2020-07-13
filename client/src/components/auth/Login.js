@@ -1,8 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from '../../actions/auth';
 
-function Login() {
+function Login(props) {
 
     let [ formData, setFormData ] = useState({
         email: '',
@@ -20,16 +22,10 @@ function Login() {
 
     async function handleSubmit(event) {
         event.preventDefault();
-        console.log('SUCCESS');
-        // try {
-        //     let data = { email, password };
-    
-        //     let res = await axios.post('api/auth', data, { headers: { 'Content-Type': 'application/json' } });
-        //     console.log(res.data);
-            
-        // } catch (error) {
-        //     console.error(error.response.data);
-        // }
+        
+        const user = { email, password };
+        
+        props.login(user);
     }
 
     return (
@@ -69,4 +65,8 @@ function Login() {
     )
 }
 
-export default Login;
+Login.propTypes = {
+    login: PropTypes.func.isRequired
+}
+
+export default connect(null, { login })(Login);
