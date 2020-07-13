@@ -20,6 +20,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.20",
+    "react-redux": "^7.2.0",
+    "reducers": "^3.0.0-alpha",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
     "request": "^2.88.2"
   }
 }
