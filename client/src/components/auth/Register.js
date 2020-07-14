@@ -30,26 +30,12 @@ function Register(props) {
             console.log('Passwords do not match')
             props.setAlert('Passwords do not match!', 'danger');
         } else {
-            // props.setAlert('Registration Success!', 'success');
             const newUser = {
                 name,
                 email,
                 password
             }
             props.register(newUser);
-            
-
-            // try {
-            //     let config = {
-            //         headers: { 'Content-Type': 'application/json'}
-            //     }
-
-            //     let res = await axios.post('api/users', newUser, config);
-
-            //     console.log(res.data);
-            // } catch (error) {
-            //     console.error(error.response.data);
-            // }
         }
     }
 
