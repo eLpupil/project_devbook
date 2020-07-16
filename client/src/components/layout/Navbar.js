@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
@@ -16,6 +16,12 @@ function Navbar(props) {
     
     const authLinks = (
         <ul>
+            <li>
+                <Link to='/dashboard'>
+                    <i className='fas fa-user'></i>
+                    <span className="hide-sm"> Dashboard</span>
+                </Link>
+            </li>
             <li><Link to="/profiles">Developers</Link></li> 
             <li>
                 <Link to="/" onClick={props.logout}>

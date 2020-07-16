@@ -1,14 +1,53 @@
-import React from 'react';
-import propTypes from 'prop-types';
+import React, { useEffect, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { getCurrentProfile } from '../../actions/profile';
+import Spinner from '../layout/Spinner';
 
-// @todo - make dashboard route private
+// Private Component
 
 function Dashboard(props) {
-    return (
-        <div>Dashboard</div>
-    )
+
+    useEffect(() => {
+        props.getCurrentProfile();
+    }, []);
+
+
+    if (props.profile.loading && props.profile.profile == null) {
+        return <Spinner />;
+    } else {
+        return (
+            <Fragment>
+                <h1 className="large text-primary">Dashboard</h1>
+                <p className="lead">
+                    <i className='fas fa-user'>Welcome {props.auth.user && props.auth.user.name}</i>
+                </p>
+                {props.profile.profile !== null ?
+                    <Fragment>has profile</Fragment>
+                    :
+                    <Fragment>
+                        <p>You have not set up your profile yet, create a new profile below.</p>
+                        <Link to='/create-profile' className='btn btn-primary my-1'>Create Profile</Link>
+                    </Fragment>
+                }
+            </Fragment>
+        )
+    }
+
 }
 
-Dashboard.propTypes = {}
+Dashboard.propTypes = {
+    getCurrentProfile: PropTypes.func.isRequired,
+    profile: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired
+}
 
-export default Dashboard;
+function mapStateToProps(state) {
+    return {
+        profile: state.profile,
+        auth: state.auth
+    }
+}
+
+export default connect(mapStateToProps, { getCurrentProfile })(Dashboard);
