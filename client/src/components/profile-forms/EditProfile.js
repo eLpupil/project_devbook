@@ -1,10 +1,10 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { createNewProfile } from '../../actions/profile';
+import { createNewProfile, getCurrentProfile } from '../../actions/profile';
 
-function CreateProfile(props) {
+function EditProfile(props) {
     // Form Data State
     const [formData, setFormData] = useState({
         website: '',
@@ -21,7 +21,25 @@ function CreateProfile(props) {
         instagram: ''
     });
     let { website, company, location, status, skills, githubusername, bio, twitter, facebook, linkedin, youtube, instagram } = formData;
-    
+
+    useEffect(() => {
+        props.getCurrentProfile();
+        setFormData({
+            website: props.loading || !props.profile.website ? '' : props.profile.website,
+            company: props.loading || !props.profile.company ? '' : props.profile.company,
+            location: props.loading || !props.profile.location ? '' : props.profile.location,
+            status: props.loading || !props.profile.status ? '' : props.profile.status,
+            skills: props.loading || !props.profile.skills ? '' : props.profile.skills.join(','),
+            githubusername: props.loading || !props.profile.githubusername ? '' : props.profile.githubusername,
+            bio: props.loading || !props.profile.bio ? '' : props.profile.bio,
+            twitter: props.loading || !props.profile.social.twitter ? '' : props.profile.social.twitter,
+            facebook: props.loading || !props.profile.social.facebook ? '' : props.profile.social.facebook,
+            linkedin: props.loading || !props.profile.social.linkedin ? '' : props.profile.social.linkedin,
+            youtube: props.loading || !props.profile.social.youtube ? '' : props.profile.social.youtube,
+            instagram: props.loading || !props.profile.social.instagram ? '' : props.profile.social.instagram
+        })
+    }, [props.loading])
+
     function handleChange(event) {
         setFormData(
             {
@@ -33,11 +51,11 @@ function CreateProfile(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        props.createNewProfile(formData, props.history);
+        props.createNewProfile(formData, props.history, true);
     }
 
     // Show Social Media State
-    let [showSocial, toggleSocial] = useState(false); 
+    let [showSocial, toggleSocial] = useState(false);
 
     function toggle() {
         toggleSocial(!showSocial);
@@ -55,7 +73,7 @@ function CreateProfile(props) {
             <small>* = required field</small>
             <form className="form" onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <select name="status" onChange={handleChange}>
+                    <select name="status" value={status} onChange={handleChange}>
                         <option value="0">* Select Professional Status</option>
                         <option value="Developer">Developer</option>
                         <option value="Junior Developer">Junior Developer</option>
@@ -88,7 +106,7 @@ function CreateProfile(props) {
                     >City & state suggested (eg. Boston, MA)</small>
                 </div>
                 <div className="form-group">
-                    <input type="text" placeholder="* Skills" name="skills" value={skills} onChange={handleChange}/>
+                    <input type="text" placeholder="* Skills" name="skills" value={skills} onChange={handleChange} />
                     <small className="form-text">
                         Please use comma separated values (eg.HTML,CSS,JavaScript,PHP)
                     </small>
@@ -144,7 +162,7 @@ function CreateProfile(props) {
                             <input type="text" placeholder="Instagram URL" name="instagram" value={instagram} onChange={handleChange} />
                         </div>
                     </Fragment>
-                ): null
+                ) : null
                 }
 
                 <input type="submit" className="btn btn-primary my-1" />
@@ -155,8 +173,18 @@ function CreateProfile(props) {
 }
 
 
-CreateProfile.propTypes = {
-    createNewProfile: PropTypes.func.isRequired
+EditProfile.propTypes = {
+    createNewProfile: PropTypes.func.isRequired,
+    getCurrentProfile: PropTypes.func.isRequired,
+    profile: PropTypes.object,
+    loading: PropTypes.bool
 }
 
-export default connect(null, { createNewProfile })(withRouter(CreateProfile));
+function mapStateToProps(state) {
+    return {
+        profile: state.profile.profile,
+        loading: state.profile.loading
+    }
+}
+
+export default connect(mapStateToProps, { createNewProfile, getCurrentProfile })(withRouter(EditProfile));

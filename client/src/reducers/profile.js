@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, LOGOUT, AUTH_ERROR } from '../actions/types';
+import { GET_PROFILE, PROFILE_ERROR, LOGOUT, AUTH_ERROR, CREATE_PROFILE } from '../actions/types';
 
 const initialState = {
     profile: null,
@@ -11,10 +11,12 @@ const initialState = {
 export default function(state = initialState, action) {
     switch (action.type) {
         case GET_PROFILE:
+        case CREATE_PROFILE:
             return {
                 ...state,
                 profile: action.payload,
-                loading: false
+                loading: false,
+                error: {}
             }
             break;
         case LOGOUT:
@@ -24,7 +26,8 @@ export default function(state = initialState, action) {
                 ...state,
                 ...initialState,
                 loading: false,
-                repos: []
+                repos: [],
+                error: action.payload
             }
         default:
             return state;

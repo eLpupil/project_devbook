@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profile';
 import Spinner from '../layout/Spinner';
+import DashboardActions from './DashboardActions';
 
 // Private Component
 
@@ -21,10 +22,13 @@ function Dashboard(props) {
             <Fragment>
                 <h1 className="large text-primary">Dashboard</h1>
                 <p className="lead">
-                    <i className='fas fa-user'>Welcome {props.auth.user && props.auth.user.name}</i>
+                    <i className='fas fa-user'></i> Welcome {props.auth.user && props.auth.user.name}
                 </p>
                 {props.profile.profile !== null ?
-                    <Fragment>has profile</Fragment>
+                    <Fragment>
+                        <DashboardActions />
+                        has profile
+                    </Fragment>
                     :
                     <Fragment>
                         <p>You have not set up your profile yet, create a new profile below.</p>
