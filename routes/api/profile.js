@@ -183,7 +183,8 @@ router.put('/experience', [auth, [
             profile.experience.unshift(newExp);
             await profile.save();
 
-            res.json({ msg: 'Experience added' })
+            // res.json({ msg: 'Experience added' })
+            res.json(profile);
         } catch (error) {
             console.error(error.message);
             res.status(500).send({ msg: 'Server error' });

@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, CREATE_PROFILE } from './types';
+import { GET_PROFILE, PROFILE_ERROR, CREATE_PROFILE, ADD_EXPERIENCE } from './types';
 import axios from 'axios';
 import { setAlert } from './alert';
 import setHeaderWithToken from '../utils/setAuthToken';
@@ -55,6 +55,41 @@ export function createNewProfile(profileData, history, edit = false) {
                 errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
             }
 
+            dispatch({
+                type: PROFILE_ERROR,
+                payload: { msg: error.response.statusText, status: error.response.status }
+            })
+        }
+    }
+}
+
+// Add Experience
+export function addExperience(newExperience, history) {
+    return async (dispatch) => {
+        try {
+
+            let config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }   
+
+            let res = await axios.put('/api/profile/experience', newExperience, config);
+            dispatch({
+                type: ADD_EXPERIENCE,
+                payload: res.data
+            })
+            dispatch(setAlert('New experience added', 'success'));
+
+            history.push('/dashboard');
+
+        } catch (error) {
+            const errors = error.response.data.errors;
+
+            if (errors) {
+                errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
+            
             dispatch({
                 type: PROFILE_ERROR,
                 payload: { msg: error.response.statusText, status: error.response.status }
