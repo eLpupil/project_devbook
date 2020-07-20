@@ -27,7 +27,6 @@ function Dashboard(props) {
                 {props.profile.profile !== null ?
                     <Fragment>
                         <DashboardActions />
-                        has profile
                     </Fragment>
                     :
                     <Fragment>

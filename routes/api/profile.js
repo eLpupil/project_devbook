@@ -165,7 +165,8 @@ router.delete('/me', auth, async (req, res) => {
 router.put('/experience', [auth, [
     check('title', 'Title is required').notEmpty(),
     check('company', 'Company is required').notEmpty(),
-    check('description', 'Description is required').notEmpty()
+    check('description', 'Description is required').notEmpty(),
+    check('from', 'Start date is required').notEmpty()
 ]],
     async (req, res) => {
         const errors = validationResult(req);
@@ -243,7 +244,7 @@ router.put('/education', [ auth, [
             profile.education.unshift(newEducation);
 
             await profile.save();
-            res.json({ msg: 'Education Added' });
+            res.json(profile);
         } catch (error) {
             console.error(error.message);
             res.status(500).json({ msg: 'Server error' });

@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createNewProfile, getCurrentProfile } from '../../actions/profile';
@@ -187,4 +187,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { createNewProfile, getCurrentProfile })(withRouter(EditProfile));
+export default connect(mapStateToProps, { createNewProfile, getCurrentProfile })(EditProfile);
