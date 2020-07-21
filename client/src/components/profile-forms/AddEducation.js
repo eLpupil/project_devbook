@@ -102,6 +102,7 @@ function AddEducation(props) {
                         name="to" 
                         value={to} 
                         onChange={handleChange}
+                        disabled={current ? 'disabled' : ''}
                     />
                 </div>
                 <div className="form-group">

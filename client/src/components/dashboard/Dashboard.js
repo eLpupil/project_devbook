@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profile';
 import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
+import Experience from './Experience';
 
 // Private Component
 
@@ -27,6 +28,7 @@ function Dashboard(props) {
                 {props.profile.profile !== null ?
                     <Fragment>
                         <DashboardActions />
+                        <Experience />
                     </Fragment>
                     :
                     <Fragment>

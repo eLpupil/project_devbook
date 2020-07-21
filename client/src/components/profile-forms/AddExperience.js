@@ -65,7 +65,7 @@ function AddExperience(props) {
                 </div>
                 <div className="form-group">
                     <h4>To Date</h4>
-                    <input type="date" name="to" onChange={handleChange} value={to} />
+                    <input type="date" name="to" onChange={handleChange} value={to} disabled={current ? 'disabled' : ''} />
                 </div>
                 <div className="form-group">
                     <textarea
