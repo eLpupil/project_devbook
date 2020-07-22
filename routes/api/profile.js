@@ -202,10 +202,10 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         let profile = await Profile.findOneAndUpdate(
             { user: req.user.id },
             { $pull: { experience: { _id: req.params.exp_id } } },
-            { useFindAndModify: false });
+            { new: true, useFindAndModify: false });
             
         await profile.save();
-        res.json({ msg: 'Experience has been deleted' });
+        res.json(profile);
     } catch (error) {
         console.error(error.message);
         res.status(500).send({ msg: 'Server error' });

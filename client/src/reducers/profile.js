@@ -5,8 +5,10 @@ import {
     AUTH_ERROR,
     CREATE_PROFILE,
     ADD_EXPERIENCE,
+    DELETE_EXPERIENCE,
     ADD_EDUCATION,
-    EDIT_ERROR
+    EDIT_ERROR,
+    DELETE_ERROR
 } from '../actions/types';
 
 const initialState = {
@@ -22,6 +24,7 @@ export default function (state = initialState, action) {
         case GET_PROFILE:
         case CREATE_PROFILE:
         case ADD_EXPERIENCE:
+        case DELETE_EXPERIENCE:
         case ADD_EDUCATION:
             return {
                 ...state,
@@ -40,6 +43,7 @@ export default function (state = initialState, action) {
                 error: action.payload
             }
         case EDIT_ERROR:
+        case DELETE_ERROR:
             return {
                 ...state,
                 loading: false,

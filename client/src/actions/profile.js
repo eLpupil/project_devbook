@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, CREATE_PROFILE, ADD_EXPERIENCE, ADD_EDUCATION, EDIT_ERROR } from './types';
+import { GET_PROFILE, PROFILE_ERROR, CREATE_PROFILE, ADD_EXPERIENCE, ADD_EDUCATION, EDIT_ERROR, DELETE_ERROR, DELETE_EXPERIENCE } from './types';
 import axios from 'axios';
 import { setAlert } from './alert';
 import setHeaderWithToken from '../utils/setAuthToken';
@@ -134,8 +134,28 @@ export function addEducation(newEducation, history) {
 }
 
 // Delete Experience
-export function deleteExperience() {
-    return (dispatch) => {
-        
+export function deleteExperience(id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            let res = await axios.delete(`/api/profile/experience/${id}`, config);
+            
+            dispatch({
+                type: DELETE_EXPERIENCE,
+                payload: res.data
+            });
+            dispatch(setAlert('Experience Deleted', 'success'));
+
+        } catch (error) {
+            dispatch({
+                type: DELETE_ERROR,
+                payload: { msg: error.response.statusText, status: error.response.status }
+            })
+        }
     }
 }
