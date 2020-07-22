@@ -6,7 +6,6 @@ import { deleteAccount } from '../../actions/profile';
 function DeleteAccount(props) {
 
     function handleClick() {
-        alert('This will permanently delete your account. Are you sure you want to continue?');
         props.deleteAccount();
     }
 

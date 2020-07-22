@@ -196,20 +196,22 @@ export function deleteAccount() {
             }
         }
         
-        try {
-            let res = await axios.delete('/api/profile/me', config);
-
-            dispatch({
-                type: DELETE_ACCOUNT,
-                payload: res.data
-            })
-            dispatch(setAlert('Account has been deleted', 'success'));
-            
-        } catch (error) {
-            dispatch({
-                type: DELETE_ERROR,
-                payload: { msg: error.response.statusText, status: error.response.status }
-            })
+        if(window.confirm('Account will be PERMANENTLY deleted. Are you sure you want to continue?')) {
+            try {
+                let res = await axios.delete('/api/profile/me', config);
+    
+                dispatch({
+                    type: DELETE_ACCOUNT,
+                    payload: res.data
+                })
+                dispatch(setAlert('Account has been permanently deleted', 'success'));
+    
+            } catch (error) {
+                dispatch({
+                    type: DELETE_ERROR,
+                    payload: { msg: error.response.statusText, status: error.response.status }
+                })
+            }
         }
     }
 }
