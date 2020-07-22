@@ -70,7 +70,7 @@ function AddEducation(props) {
                 <div className="form-group">
                     <input 
                     type="text" 
-                    placeholder="Field Of Study"
+                    placeholder="* Field Of Study"
                     name="fieldofstudy" 
                     value={fieldofstudy} 
                     onChange={handleChange} 

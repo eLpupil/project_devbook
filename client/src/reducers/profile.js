@@ -6,6 +6,7 @@ import {
     CREATE_PROFILE,
     ADD_EXPERIENCE,
     DELETE_EXPERIENCE,
+    DELETE_EDUCATION,
     ADD_EDUCATION,
     EDIT_ERROR,
     DELETE_ERROR
@@ -25,6 +26,7 @@ export default function (state = initialState, action) {
         case CREATE_PROFILE:
         case ADD_EXPERIENCE:
         case DELETE_EXPERIENCE:
+        case DELETE_EDUCATION:
         case ADD_EDUCATION:
             return {
                 ...state,

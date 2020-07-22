@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, CREATE_PROFILE, ADD_EXPERIENCE, ADD_EDUCATION, EDIT_ERROR, DELETE_ERROR, DELETE_EXPERIENCE } from './types';
+import { GET_PROFILE, PROFILE_ERROR, CREATE_PROFILE, ADD_EXPERIENCE, ADD_EDUCATION, EDIT_ERROR, DELETE_ERROR, DELETE_EXPERIENCE, DELETE_EDUCATION, DELETE_ACCOUNT} from './types';
 import axios from 'axios';
 import { setAlert } from './alert';
 import setHeaderWithToken from '../utils/setAuthToken';
@@ -149,7 +149,7 @@ export function deleteExperience(id) {
                 type: DELETE_EXPERIENCE,
                 payload: res.data
             });
-            dispatch(setAlert('Experience Deleted', 'success'));
+            dispatch(setAlert('Experience deleted', 'success'));
 
         } catch (error) {
             dispatch({
@@ -158,4 +158,36 @@ export function deleteExperience(id) {
             })
         }
     }
+}
+
+// Delete Education
+export function deleteEducation(id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            let res = await axios.delete(`/api/profile/education/${id}`, config);
+            
+            dispatch({
+                type: DELETE_EDUCATION,
+                payload: res.data
+            });
+            dispatch(setAlert('Education deleted', 'success'));
+
+        } catch (error) {
+            dispatch({
+                type: DELETE_ERROR,
+                payload: { msg: error.response.statusText, status: error.response.status }
+            })
+        }
+    }
+}
+
+// Delete Profile
+export function deleteAccount() {
+    
 }

@@ -48,7 +48,8 @@ function Experience(props) {
 }
 
 Experience.propTypes = {
-    experiences: PropTypes.array
+    experiences: PropTypes.array,
+    deleteExperience: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {

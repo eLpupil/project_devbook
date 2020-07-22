@@ -264,7 +264,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
             { new: true, useFindAndModify: false });
 
         await profile.save();
-        res.json({ msg: 'Education deleted' });
+        res.json(profile);
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ msg: 'Server error' });
