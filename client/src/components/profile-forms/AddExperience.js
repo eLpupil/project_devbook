@@ -72,7 +72,7 @@ function AddExperience(props) {
                         name="description"
                         cols="30"
                         rows="5"
-                        placeholder="Job Description"
+                        placeholder="* Job Description"
                         onChange={handleChange}
                         value={description}
                     ></textarea>

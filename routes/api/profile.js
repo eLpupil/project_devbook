@@ -72,11 +72,11 @@ router.post('/', [auth,
         if (skills) profileFields.skills = skills.split(',').map(skill => skill.trim());
 
         profileFields.social = {};
-        if (youtube) profileFields.social.youtube = youtube;
-        if (twitter) profileFields.social.twitter = twitter;
-        if (facebook) profileFields.social.facebook = facebook;
-        if (linkedin) profileFields.social.linkedin = linkedin;
-        if (instagram) profileFields.social.instagram = instagram;
+        profileFields.social.youtube = youtube;
+        profileFields.social.twitter = twitter;
+        profileFields.social.facebook = facebook;
+        profileFields.social.linkedin = linkedin;
+        profileFields.social.instagram = instagram;
 
         try {
             let profile = await Profile.findOneAndUpdate(
@@ -151,7 +151,7 @@ router.delete('/me', auth, async (req, res) => {
         await User.findOneAndRemove({ _id: req.user.id }, { useFindAndModify: false });
         // @todo - delete posts
 
-        res.json({ msg: 'User has been deleted' });
+        res.status(200).json({ msg: 'User has been deleted' });
 
     } catch (error) {
         console.log(error.message);

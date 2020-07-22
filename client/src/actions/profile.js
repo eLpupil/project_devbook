@@ -189,5 +189,27 @@ export function deleteEducation(id) {
 
 // Delete Profile
 export function deleteAccount() {
-    
+    return async (dispatch) =>{
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+        
+        try {
+            let res = await axios.delete('/api/profile/me', config);
+
+            dispatch({
+                type: DELETE_ACCOUNT,
+                payload: res.data
+            })
+            dispatch(setAlert('Account has been deleted', 'success'));
+            
+        } catch (error) {
+            dispatch({
+                type: DELETE_ERROR,
+                payload: { msg: error.response.statusText, status: error.response.status }
+            })
+        }
+    }
 }

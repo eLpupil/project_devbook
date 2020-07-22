@@ -23,7 +23,7 @@ function Experience(props) {
                 </thead>
                 <tbody>
 
-                    {props.experiences.map(exp => {
+                    {props.experiences ? props.experiences.map(exp => {
                         return (
                             <tr key={exp._id}>
                                 <td>{exp.company}</td>
@@ -38,7 +38,7 @@ function Experience(props) {
                                 </td>
                             </tr>
                         )
-                    })}
+                    }) : null }
 
 
                 </tbody>

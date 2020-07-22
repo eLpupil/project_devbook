@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createNewProfile } from '../../actions/profile';
@@ -159,4 +159,4 @@ CreateProfile.propTypes = {
     createNewProfile: PropTypes.func.isRequired
 }
 
-export default connect(null, { createNewProfile })(withRouter(CreateProfile));
+export default connect(null, { createNewProfile })(CreateProfile);

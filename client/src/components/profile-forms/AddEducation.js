@@ -110,7 +110,7 @@ function AddEducation(props) {
                         name="description"
                         cols="30"
                         rows="5"
-                        placeholder="Program Description"
+                        placeholder="* Program Description"
                         value={description}
                         onChange={handleChange}
                     ></textarea>

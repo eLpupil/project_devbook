@@ -22,7 +22,7 @@ function Education(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.educations.map(edu => {
+                    {props.educations ? props.educations.map(edu => {
                         return (
                             <tr key={edu._id}>
                                 <td>{edu.school}</td>
@@ -35,7 +35,7 @@ function Education(props) {
                                 </td>
                             </tr>
                         )
-                    })}
+                    }) : null }
                 </tbody>
             </table>
         </Fragment>

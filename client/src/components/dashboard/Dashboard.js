@@ -7,6 +7,7 @@ import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
 import Experience from './Experience';
 import Education from './Education';
+import DeleteAccount from './DeleteAccount';
 
 // Private Component
 
@@ -31,6 +32,7 @@ function Dashboard(props) {
                         <DashboardActions />
                         <Experience />
                         <Education />
+                        <DeleteAccount />
                     </Fragment>
                     :
                     <Fragment>

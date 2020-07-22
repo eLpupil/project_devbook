@@ -1,19 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { deleteAccount } from '../../actions/profile';
 
 function DeleteAccount(props) {
 
     function handleClick() {
-        
+        alert('This will permanently delete your account. Are you sure you want to continue?');
+        props.deleteAccount();
     }
 
     return (
-        <div class="my-2">
-            <button class="btn btn-danger" onClick={handleClick}>
-                <i class="fas fa-user-minus"></i>
-
-                Delete My Account
+        <div className="my-2">
+            <button className="btn btn-danger" onClick={handleClick}>
+                <i className="fas fa-user-minus"></i>Delete My Account
             </button>
         </div>
     )
@@ -23,4 +23,4 @@ DeleteAccount.propTypes = {
     deleteAccount: PropTypes.func.isRequired
 }
 
-export default connect()(DeleteAccount);
+export default connect(null, { deleteAccount })(DeleteAccount);

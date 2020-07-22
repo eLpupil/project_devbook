@@ -9,7 +9,8 @@ import {
     DELETE_EDUCATION,
     ADD_EDUCATION,
     EDIT_ERROR,
-    DELETE_ERROR
+    DELETE_ERROR,
+    DELETE_ACCOUNT
 } from '../actions/types';
 
 const initialState = {
@@ -43,6 +44,12 @@ export default function (state = initialState, action) {
                 loading: false,
                 repos: [],
                 error: action.payload
+            }
+        case DELETE_ACCOUNT:
+            return {
+                ...state,
+                ...initialState,
+                loading: false
             }
         case EDIT_ERROR:
         case DELETE_ERROR:
