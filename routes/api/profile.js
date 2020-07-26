@@ -60,7 +60,7 @@ router.post('/', [auth,
             instagram
         } = req.body;
 
-        // Build profile object
+        // Build profile object // @todo bug if field is empty, won't update
         const profileFields = {};
         profileFields.user = req.user.id;
         if (company) profileFields.company = company;

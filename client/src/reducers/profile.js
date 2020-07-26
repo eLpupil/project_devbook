@@ -1,5 +1,7 @@
 import {
     GET_PROFILE,
+    GET_PROFILE_BY_ID,
+    GET_PROFILES,
     PROFILE_ERROR,
     LOGOUT,
     AUTH_ERROR,
@@ -24,6 +26,7 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case GET_PROFILE:
+        case GET_PROFILE_BY_ID:
         case CREATE_PROFILE:
         case ADD_EXPERIENCE:
         case DELETE_EXPERIENCE:
@@ -35,12 +38,19 @@ export default function (state = initialState, action) {
                 loading: false,
                 error: {}
             }
+        case GET_PROFILES:
+            return {
+                ...state,
+                profiles: action.payload,
+                loading: false,
+                error: {}
+            }
         case LOGOUT:
         case AUTH_ERROR:
         case PROFILE_ERROR:
             return {
                 ...state,
-                ...initialState,
+                profile: null,
                 loading: false,
                 repos: [],
                 error: action.payload
