@@ -3,6 +3,9 @@ import { getProfileById } from '../../actions/profile';
 import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
 import ProfileAbout from './ProfileAbout';
+import ProfileExperience from './ProfileExperience';
+import ProfileEducation from './ProfileEducation';
+import ProfileGithub from './ProfileGithub';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -33,6 +36,9 @@ function Profile(props) {
                     <div className="profile-grid my-1">
                         <ProfileTop/>
                         <ProfileAbout/>
+                        <ProfileExperience/>
+                        <ProfileEducation/>
+                        {props.profile.profile.githubusername && <ProfileGithub githubUser={props.profile.profile.githubusername}/>}
                     </div>
                 </Fragment>
                 
@@ -43,7 +49,9 @@ function Profile(props) {
 
 
 Profile.propTypes = {
-    profile: PropTypes.object
+    getProfileById: PropTypes.func.isRequired,
+    profile: PropTypes.object,
+    auth: PropTypes.object
 }
 
 function mapStateToProps(state) {

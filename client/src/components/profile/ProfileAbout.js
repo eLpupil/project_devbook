@@ -7,20 +7,18 @@ function ProfileAbout(props) {
     const { user: { name }, skills, bio } = props.profile;
 
     return (
-        <div class="profile-about bg-light p-2">
-            {bio ?
+        <div className="profile-about bg-light p-2">
+            {bio &&
                 (<Fragment>
-                    <h2 class="text-primary">{name.split(' ')[0] + "'s Bio"}</h2>
+                    <h2 className="text-primary">{name.split(' ')[0] + "'s Bio"}</h2>
                     <p>{bio}</p>
+                <div className="line"></div>
                 </Fragment>)
-                :
-                <p>Bio: 404 :^)</p>
             }
-            <div class="line"></div>
-            <h2 class="text-primary">Skill Set</h2>
-            <div class="skills">
+            <h2 className="text-primary">Skill Set</h2>
+            <div className="skills">
                 {skills.map((skill, idx) => {
-                    return <div class="p-1"><i class="fa fa-check"></i> {skill}</div>
+                    return <div key={idx} className="p-1"><i className="fa fa-check"></i> {skill}</div>
                 })}
             </div>
         </div>

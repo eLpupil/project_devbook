@@ -10,7 +10,9 @@ import {
     DELETE_ERROR,
     DELETE_EXPERIENCE,
     DELETE_EDUCATION,
-    DELETE_ACCOUNT
+    DELETE_ACCOUNT,
+    GET_GITHUB,
+    GITHUB_ERROR
 } from './types';
 import axios from 'axios';
 import { setAlert } from './alert';
@@ -266,6 +268,25 @@ export function deleteAccount() {
                     payload: { msg: error.response.statusText, status: error.response.status }
                 })
             }
+        }
+    }
+}
+
+// Get User Github
+export function getGithub(githubUser) {
+    return async (dispatch) => {
+        try {
+            let res = await axios.get(`/api/profile/github/${githubUser}`);
+
+            dispatch({
+                type: GET_GITHUB,
+                payload: res.data
+            })
+        } catch (error) {
+            dispatch({
+                type: GITHUB_ERROR,
+                payload: { msg: error.response.statusText, status: error.response.status }
+            })
         }
     }
 }

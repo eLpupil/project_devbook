@@ -12,13 +12,15 @@ import {
     ADD_EDUCATION,
     EDIT_ERROR,
     DELETE_ERROR,
-    DELETE_ACCOUNT
+    DELETE_ACCOUNT,
+    GET_GITHUB,
+    GITHUB_ERROR
 } from '../actions/types';
 
 const initialState = {
     profile: null,
     profiles: [],
-    repos: [],
+    repos: null,
     loading: true,
     error: {}
 }
@@ -35,6 +37,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 profile: action.payload,
+                repos: null,
                 loading: false,
                 error: {}
             }
@@ -42,7 +45,15 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 profiles: action.payload,
+                repos: null,
                 loading: false,
+                error: {}
+            }
+        case GET_GITHUB:
+            return {
+                ...state,
+                loading: false,
+                repos: action.payload,
                 error: {}
             }
         case LOGOUT:
@@ -52,7 +63,7 @@ export default function (state = initialState, action) {
                 ...state,
                 profile: null,
                 loading: false,
-                repos: [],
+                repos: null,
                 error: action.payload
             }
         case DELETE_ACCOUNT:
@@ -63,10 +74,11 @@ export default function (state = initialState, action) {
             }
         case EDIT_ERROR:
         case DELETE_ERROR:
+        case GITHUB_ERROR:
             return {
                 ...state,
                 loading: false,
-                repos: [],
+                repos: null,
                 error: action.payload
             }
         default:
