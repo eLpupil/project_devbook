@@ -9,7 +9,7 @@ function ProfileGithub(props) {
 
     useEffect(() => {
         props.getGithub(props.githubUser);
-    }, [])
+    }, [props.getGithub])
 
     return (
         <Fragment>
@@ -19,9 +19,9 @@ function ProfileGithub(props) {
                 </h2>
                 {props.repos === null ? <Spinner/>
                 :
-                props.repos.map((repo, idx) => {
+                props.repos.map(repo => {
                     return (
-                        <div className="repo bg-white p-1 my-1" key={idx}>
+                        <div className="repo bg-white p-1 my-1" key={repo.id}>
                             <div>
                                 <h4>
                                     <a href={repo.html_url} target="_blank" rel="noopener noreferrer">{repo.name}</a>

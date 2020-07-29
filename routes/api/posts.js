@@ -37,7 +37,7 @@ router.post('/',
 
             let post = new Post(postFields);
             await post.save();
-            res.json({ msg: 'Post added', post });
+            res.json(post);
 
         } catch (error) {
             console.error(error.message);

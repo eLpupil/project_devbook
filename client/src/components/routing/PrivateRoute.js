@@ -7,7 +7,7 @@ import { Route, Redirect } from 'react-router-dom';
 function PrivateRoute({ component: Component, auth: { isAuthenticated, loading }, ...rest }) {
     return (
         <Route {...rest} render={props => {
-            if ((!isAuthenticated && !loading) || isAuthenticated === null ) {
+            if ((!isAuthenticated && !loading) ) {
                 return <Redirect to='/login' />;
             }
             else {
