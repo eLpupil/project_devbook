@@ -80,7 +80,7 @@ function Posts(props) {
                                         Discussion 
                                         {post.comments.length !==0 && <span className='comment-count'>{post.comments.length}</span>}
                                     </Link>
-                                    {props.auth.user._id === post.user 
+                                    {props.auth.user && props.auth.user._id === post.user 
                                     && 
                                     <button type="button" className="btn btn-danger">
                                         <i className="fas fa-times"></i>
