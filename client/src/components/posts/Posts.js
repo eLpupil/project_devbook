@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { addPost, getAllPosts } from '../../actions/posts';
+import { addPost, getAllPosts, likePost, unlikePost } from '../../actions/posts';
 import Spinner from '../layout/Spinner';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -25,6 +25,7 @@ function Posts(props) {
         props.addPost({ text });
         setText('')
     }
+
 
     return (
         <Fragment>
@@ -69,11 +70,11 @@ function Posts(props) {
                                 <div>
                                     <p className="my-1">{post.text}</p>
                                     <p className="post-date"><Moment format="YYYY/MM/DD">{post.date}</Moment></p>
-                                    <button type="button" className="btn btn-light">
-                                        <i className="fas fa-thumbs-up"></i>
+                                    <button type="button" className="btn btn-light" onClick={() => props.likePost(post._id)}>
+                                        <i className="fas fa-thumbs-up"></i>{' '}
                                         {post.likes.length !==0 && <span>{post.likes.length}</span>}
                                     </button>
-                                    <button type="button" className="btn btn-light">
+                                    <button type="button" className="btn btn-light" onClick={() => props.unlikePost(post._id)}>
                                         <i className="fas fa-thumbs-down"></i>
                                     </button>
                                     <Link to="post.html" className="btn btn-primary">
@@ -108,4 +109,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { addPost, getAllPosts })(Posts);
+export default connect(mapStateToProps, { addPost, getAllPosts, likePost, unlikePost })(Posts);

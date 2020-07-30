@@ -1,6 +1,7 @@
-import { ADD_POST, GET_POSTS, POST_ERROR } from './types';
+import { ADD_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR } from './types';
 import { setAlert } from './alert';
 import axios from 'axios';
+import { post } from 'request';
 
 // Get All Posts
 export function getAllPosts() {
@@ -61,3 +62,54 @@ export function addPost(newPost) {
     }
 }
 
+// Like post 
+export function likePost(id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+    
+        try {
+            let res = await axios.put(`/api/posts/likes/${id}`, null, config);
+            
+            dispatch({
+                type: LIKE_POST,
+                payload: { id, likes: res.data }
+            })
+        } catch (error) {
+            dispatch({
+                type: LIKE_ERROR,
+                payload: { msg: error.response.data }
+            })
+        }
+    }
+}
+
+// Unlike post
+export function unlikePost(id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+        
+        try {
+            let res = await axios.put(`/api/posts/unlike/${id}`, null, config);
+
+            dispatch({
+                type: UNLIKE_POST,
+                payload: { id, likes: res.data }
+            })
+        } catch (error) {
+            console.log(error);
+            dispatch({
+                type: LIKE_ERROR,
+                payload: { msg : error.response.data }
+            })
+        }
+
+    }
+}

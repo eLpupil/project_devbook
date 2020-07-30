@@ -117,7 +117,7 @@ router.delete('/:post_id', auth, async (req, res) => {
 })
 
 // @route   PUT /api/posts/likes/:post_id
-// @desc    let user like or unlike a post
+// @desc    let user like a post
 // @access  PRIVATE
 router.put('/likes/:post_id', auth, async (req, res) => {
     try {
@@ -131,15 +131,43 @@ router.put('/likes/:post_id', auth, async (req, res) => {
         for (let i = 0; i < post.likes.length; i++) {
 
             if (post.likes[i].user.toString() == req.user.id) {
-                post.likes.splice(i, 1);
-                await post.save();
-                return res.status(400).json(post.likes);
+                return res.json(post.likes);
             }
 
         }
 
         post.likes.unshift({ user: req.user.id });
         await post.save();
+        res.json(post.likes);
+
+    } catch (error) {
+        console.error(error.message);
+        if (error.kind == 'ObjectId') {
+            return res.status(404).json({ msg: `Error: No post with ID: ${req.params.post_id}` });
+        }
+        res.status(500).json({ msg: 'Server error' });
+    }
+})
+
+// @route PUT /api/posts/unlike/:post_id
+// @desc let user unlike a post
+// @access PRIVATE
+router.put('/unlike/:post_id', auth, async (req, res) => {
+    try {
+        let post = await Post.findById(req.params.post_id);
+        
+        if (!post) {
+            return res.status(404).json({ msg: `Error: No post with ID: ${req.params.postid}` });
+        }
+
+        for (let i = 0; i < post.likes.length; i++) {
+
+            if (post.likes[i].user.toString() == req.user.id) {
+                post.likes.splice(i, 1);
+                await post.save();
+            }
+            
+        }
         res.json(post.likes);
 
     } catch (error) {
