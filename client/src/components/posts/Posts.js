@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { addPost, getAllPosts, likePost, unlikePost } from '../../actions/posts';
+import { addPost, getAllPosts, likePost, unlikePost, deletePost } from '../../actions/posts';
 import Spinner from '../layout/Spinner';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -83,7 +83,7 @@ function Posts(props) {
                                     </Link>
                                     {props.auth.user && props.auth.user._id === post.user 
                                     && 
-                                    <button type="button" className="btn btn-danger">
+                                    <button type="button" className="btn btn-danger" onClick={() => props.deletePost(post._id)}>
                                         <i className="fas fa-times"></i>
                                     </button>}
                                 </div>
@@ -109,4 +109,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { addPost, getAllPosts, likePost, unlikePost })(Posts);
+export default connect(mapStateToProps, { addPost, getAllPosts, likePost, unlikePost, deletePost })(Posts);

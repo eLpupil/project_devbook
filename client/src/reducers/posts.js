@@ -1,4 +1,4 @@
-import { ADD_POST, GET_POSTS, POST_ERROR, LIKE_POST, LIKE_ERROR, UNLIKE_POST } from '../actions/types';
+import { ADD_POST, GET_POSTS, POST_ERROR, LIKE_POST, LIKE_ERROR, UNLIKE_POST, DELETE_POST, DELETE_POST_ERROR } from '../actions/types';
 
 let initialState = {
     post: {},
@@ -12,6 +12,7 @@ export default function (state = initialState, action) {
     switch (action.type) {
         case ADD_POST:
         case GET_POSTS:
+        case DELETE_POST:
             return {
                 ...state,
                 posts: [...action.payload],
@@ -26,6 +27,7 @@ export default function (state = initialState, action) {
             }
         case POST_ERROR:
         case LIKE_ERROR:
+        case DELETE_POST_ERROR:
             return {
                 ...state,
                 loading: false,

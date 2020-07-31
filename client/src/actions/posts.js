@@ -1,4 +1,4 @@
-import { ADD_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR } from './types';
+import { ADD_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR, DELETE_POST, DELETE_POST_ERROR } from './types';
 import { setAlert } from './alert';
 import axios from 'axios';
 import { post } from 'request';
@@ -111,5 +111,32 @@ export function unlikePost(id) {
             })
         }
 
+    }
+}
+
+// Delete a post
+export function deletePost(id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+        if (window.confirm('Post will be permanently deleted. Are you sure?')) {
+            try {
+                await axios.delete(`/api/posts/${id}`);
+                let res = await axios.get('/api/posts');
+    
+                dispatch({
+                    type: DELETE_POST,
+                    payload: res.data
+                })
+            } catch (error) {
+                dispatch({
+                    type: DELETE_POST_ERROR,
+                    payload: { msg: error.response.data.msg }
+                })
+            }
+        }
     }
 }

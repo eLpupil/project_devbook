@@ -29,6 +29,8 @@ export const GET_POSTS = 'GET_POSTS';
 export const LIKE_POST = 'LIKE_POST';
 export const UNLIKE_POST = 'UNLIKE_POST';
 export const LIKE_ERROR = 'LIKE_ERROR';
+export const DELETE_POST = 'DELETE_POST';
+export const DELETE_POST_ERROR = 'DELETE_POST_ERROR';
 
 export const DELETE_EXPERIENCE = 'DELETE_EXPERIENCE';
 export const DELETE_EDUCATION = 'DELETE_EDUCATION';
