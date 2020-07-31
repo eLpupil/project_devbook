@@ -1,4 +1,4 @@
-import { ADD_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR, DELETE_POST, DELETE_POST_ERROR } from './types';
+import { ADD_POST, GET_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR, DELETE_POST, DELETE_POST_ERROR, ADD_COMMENT, COMMENT_ERROR } from './types';
 import { setAlert } from './alert';
 import axios from 'axios';
 import { post } from 'request';
@@ -14,7 +14,7 @@ export function getAllPosts() {
         }
 
         try {
-            let res = await axios.get('/api/posts');
+            let res = await axios.get('/api/posts', config);
 
             dispatch({
                 type: GET_POSTS,
@@ -137,6 +137,63 @@ export function deletePost(id) {
                     payload: { msg: error.response.data.msg }
                 })
             }
+        }
+    }
+}
+
+// Get a post by ID
+export function getPost(id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            let res = await axios.get(`/api/posts/${id}`, config);
+            
+            dispatch({
+                type: GET_POST,
+                payload: res.data
+            })
+        } catch (error) {
+            dispatch({
+                type: POST_ERROR,
+                payload: { msg: error.response.data.msg }
+            })
+        }
+    }
+}
+
+// Add a comment 
+export function addComment(id, data) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        try {
+            let res = await axios.put(`/api/posts/comment/${id}`, data, config);
+
+            dispatch({
+                type: ADD_COMMENT,
+                payload: res.data
+            });
+            
+        } catch (error) {
+            const errors = error.response.data.errors;
+
+            if (errors) {
+                errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+            }
+
+            dispatch({
+                type: COMMENT_ERROR,
+                payload: { msg: error.response.data.msg }
+            });
         }
     }
 }
