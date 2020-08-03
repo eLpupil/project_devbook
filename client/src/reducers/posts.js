@@ -1,5 +1,18 @@
-import { ADD_POST, GET_POST, GET_POSTS, POST_ERROR, LIKE_POST, LIKE_ERROR, UNLIKE_POST, DELETE_POST, DELETE_POST_ERROR, ADD_COMMENT, COMMENT_ERROR } from '../actions/types';
-import { post } from 'request';
+import {
+    ADD_POST,
+    GET_POST,
+    GET_POSTS,
+    POST_ERROR,
+    LIKE_POST,
+    LIKE_ERROR,
+    UNLIKE_POST,
+    DELETE_POST,
+    DELETE_POST_ERROR,
+    ADD_COMMENT,
+    COMMENT_ERROR,
+    GET_POST_LOADING,
+    DELETE_COMMENT
+} from '../actions/types';
 
 let initialState = {
     post: {},
@@ -33,10 +46,16 @@ export default function (state = initialState, action) {
                 loading: false
             }
         case ADD_COMMENT:
+        case DELETE_COMMENT:
             return {
                 ...state,
                 post: { ...state.post, comments: action.payload },
                 loading: false
+            }
+        case GET_POST_LOADING:
+            return {
+                ...state,
+                loading: true
             }
         case POST_ERROR:
         case LIKE_ERROR:

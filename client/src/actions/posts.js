@@ -1,7 +1,6 @@
-import { ADD_POST, GET_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR, DELETE_POST, DELETE_POST_ERROR, ADD_COMMENT, COMMENT_ERROR } from './types';
+import { ADD_POST, GET_POST, GET_POSTS, POST_ERROR, LIKE_POST, UNLIKE_POST, LIKE_ERROR, DELETE_POST, DELETE_POST_ERROR, ADD_COMMENT, COMMENT_ERROR, GET_POST_LOADING, DELETE_COMMENT } from './types';
 import { setAlert } from './alert';
 import axios from 'axios';
-import { post } from 'request';
 
 // Get All Posts
 export function getAllPosts() {
@@ -151,6 +150,9 @@ export function getPost(id) {
         }
 
         try {
+            dispatch({
+                type: GET_POST_LOADING
+            })
             let res = await axios.get(`/api/posts/${id}`, config);
             
             dispatch({
@@ -194,6 +196,32 @@ export function addComment(id, data) {
                 type: COMMENT_ERROR,
                 payload: { msg: error.response.data.msg }
             });
+        }
+    }
+}
+
+// Delete a comment
+export function deleteComment(post_id, comment_id) {
+    return async (dispatch) => {
+        let config = {
+            header: {
+                'Content-Type': 'application/json'
+            }
+        }
+        if (window.confirm('Comment will be permanently deleted. Are you sure?')) {
+            try {
+                let res = await axios.delete(`/api/posts/comment/${post_id}/${comment_id}`);
+    
+                dispatch({
+                    type: DELETE_COMMENT,
+                    payload: res.data
+                });
+            } catch (error) {
+                dispatch({
+                    type: COMMENT_ERROR,
+                    payload: { msg: error.response.data.msg }
+                })
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ export const ADD_POST ='CREATE_POST';
 export const POST_ERROR = 'POST_ERROR';
 export const GET_POSTS = 'GET_POSTS';
 export const GET_POST = 'GET_POST';
+export const GET_POST_LOADING = 'GET_POST_LOADING';
 
 export const LIKE_POST = 'LIKE_POST';
 export const UNLIKE_POST = 'UNLIKE_POST';
@@ -35,6 +36,7 @@ export const DELETE_POST_ERROR = 'DELETE_POST_ERROR';
 
 export const ADD_COMMENT = 'ADD_COMMENT';
 export const COMMENT_ERROR = 'COMMENT_ERROR';
+export const DELETE_COMMENT = 'DELETE_COMMENT';
 
 export const DELETE_EXPERIENCE = 'DELETE_EXPERIENCE';
 export const DELETE_EDUCATION = 'DELETE_EDUCATION';

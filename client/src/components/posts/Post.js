@@ -1,6 +1,8 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { getPost, addComment } from '../../actions/posts';
+import { getPost, addComment, deleteComment } from '../../actions/posts';
+import Spinner from '../layout/Spinner';
+import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -9,10 +11,10 @@ function Post(props) {
     useEffect(() => {
         props.getPost(props.match.params.id);
     }, [props.getPost]);
-    
-    let { user, postText, avatar, _id, name, likes, comments } = props.post;
 
-    let [text, setText] = useState('');
+    let { user, text, avatar, _id, name, likes, comments } = props.post;
+
+    let [commentText, setText] = useState('');
 
     function handleChange(event) {
         setText(event.target.value)
@@ -20,7 +22,7 @@ function Post(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        props.addComment(_id, {text});
+        props.addComment(_id, { text: commentText });
         setText('');
     }
 
@@ -39,7 +41,7 @@ function Post(props) {
                     </Link>
                 </div>
                 <div>
-                    <p className="my-1">{postText}</p>
+                    <p className="my-1">{text}</p>
                 </div>
             </div>
 
@@ -53,37 +55,40 @@ function Post(props) {
                         cols="30"
                         rows="5"
                         placeholder="Comment on this post"
-                        value={text}
+                        value={commentText}
                         onChange={handleChange}
                     ></textarea>
-                    <input type="submit" className="btn btn-dark my-1" value="Submit" onClick={handleSubmit}/>
+                    <input type="submit" className="btn btn-dark my-1" value="Submit" onClick={handleSubmit} />
                 </form>
             </div>
 
             <div className="comments">
-                <div className="post bg-white p-1 my-1">
-                    <div>
-                        <a href="profile.html">
-                            <img
-                                className="round-img"
-                                src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200"
-                                alt=""
-                            />
-                            <h4>John Doe</h4>
-                        </a>
-                    </div>
-                    <div>
-                        <p className="my-1">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-                            possimus corporis sunt necessitatibus! Minus nesciunt soluta
-                            suscipit nobis. Amet accusamus distinctio cupiditate blanditiis
-                            dolor? Illo perferendis eveniet cum cupiditate aliquam?
-                        </p>
-                        <p className="post-date">
-                            Commented on 04/16/2019
-                        </p>
-                    </div>
-                </div>
+                {props.posts.loading ? <Spinner /> : comments && comments.map(comment => {
+                    return (
+                        <div className="post bg-white p-1 my-1" key={comment._id}>
+                            <div>
+                                <Link to={`/profile/user/${comment.user}`}>
+                                    <img
+                                        className="round-img"
+                                        src={comment.avatar}
+                                        alt="commenter avatar"
+                                    />
+                                    <h4>{comment.name}</h4>
+                                </Link>
+                            </div>
+                            <div>
+                                <p className="my-1">{comment.text}</p>
+                                <p className="post-date">
+                                    Commented on <Moment format='MM/DD/YYYY'>{comment.date}</Moment>
+                                </p>
+                                {props.auth.user && comment.user === props.auth.user._id &&
+                                <button type="button" className="btn btn-danger" onClick={() => props.deleteComment(_id, comment._id)}>
+                                    <i className="fas fa-times"></i>
+                                </button>}
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
         </Fragment>
     )
@@ -91,13 +96,23 @@ function Post(props) {
 
 Post.propTypes = {
     post: PropTypes.object,
+    posts: PropTypes.object,
+    auth: PropTypes.object,
     getPost: PropTypes.func
 }
 
 function mapStateToProps(state) {
     return {
-        post: state.posts.post
+        post: state.posts.post,
+        posts: state.posts,
+        auth: state.auth
     }
 }
 
-export default connect(mapStateToProps, { getPost, addComment })(Post);
+const mapDispatchToProps = {
+    getPost,
+    addComment,
+    deleteComment
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post);
