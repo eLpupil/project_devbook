@@ -3,6 +3,7 @@
 /npm-debug.logs
 /config/default.json
 /New folder
+/video
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,react
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,react
