@@ -14,7 +14,7 @@ function ProfileEducation(props) {
                     <div key={idx} >
                         <h3>{edu.school}</h3>
                         <p>{edu.from} - {edu.to ? edu.to : 'Now'}</p>
-                        <p><strong>Degree: </strong>J{edu.degree}</p>
+                        <p><strong>Degree: </strong>{edu.degree}</p>
                         <p><strong>Field Of Study: </strong>{edu.fieldofstudy}</p>
                         <p>
                             <strong>Description: </strong>{edu.description}
