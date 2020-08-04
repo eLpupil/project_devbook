@@ -37,7 +37,6 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 profile: action.payload,
-                repos: null,
                 loading: false,
                 error: {}
             }
