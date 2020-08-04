@@ -82,7 +82,8 @@ router.post('/', [auth,
             let profile = await Profile.findOneAndUpdate(
                 { user: req.user.id },
                 { $set: profileFields },
-                { new: true, useFindAndModify: false });
+                { new: true, useFindAndModify: false })
+                    .populate('user', ['name', 'avatar']);
 
             if (!profile) {
                 let profile = new Profile(profileFields);
